@@ -23,7 +23,7 @@ const uint8_t DispWidth = 152;	//width of display
 
 volatile uint16_t ISR_zaehler;
 
-ISR (TIMER0_OVF_vect)	//timer used a a delay
+ISR (TIMER0_OVF_vect)	//timer used as a delay
 {
 	TCNT0 = 0;
 	ISR_zaehler++;	//Increase ISR_zaehler by 1
@@ -332,10 +332,13 @@ int main(void)
 	FillBW(0xff, 0, 0, DispWidth/4, DispHeight, 0);
 	FillYellow(0x00, 0, 0, DispWidth/4, DispHeight, 0);
 	
+	//Display images
+	//==================================================================
 	drawImage(0, 0, 1, 2, 0, 0, 0);
 	drawImage(1, 0, 2, 0, 0, 0, 0);
 	drawImage(2, 2, 1, 0, 16, 0, 0);
 	drawImage(3, 0, 1, 6, 0, 0, 0);
+	//==================================================================
 	SPI_Com(0x92);
 	refresh();
 	powerOFF();
@@ -343,23 +346,6 @@ int main(void)
 	Wait4Idle();
 	
 	powerOFF();
-	//~ while(1)
-	//~ {
-		//~ Wait4Idle();
-		//~ SPI_Com(0x12);
-	//~ }
-	
-	//~ FillYellow(0xFF);
-	//~ refresh();
-	//~ FillYellow(0x00);
-	//~ refresh();
-	
-	//~ FillYellow(0xFF);
-	//~ FillBW(0x00);
-	//~ refresh();
-	//~ FillYellow(0x00);
-	//~ FillBW(0xFF);
-	//~ refresh();
 	while(1);
 }//end of main
 

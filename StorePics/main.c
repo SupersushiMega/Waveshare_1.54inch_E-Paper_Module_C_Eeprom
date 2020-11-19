@@ -14,7 +14,9 @@
 
 #define PROGMEM   __ATTR_PROGMEM__	//define PROGMEM attribute
 
-const uint8_t picture1[] PROGMEM = 
+//Pictures
+//======================================================================
+const uint8_t picture1[] PROGMEM = //Pixels
 {
 	0b11111111, 0b11111111,
 	0b11101111, 0b11111111,
@@ -36,7 +38,7 @@ const uint8_t picture1[] PROGMEM =
 	0b00000000, 0b00000000,
 };
 
-const uint8_t picture2[128] PROGMEM = 
+const uint8_t picture2[128] PROGMEM = //Scarab SRV
 {
 	0xff, 0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 0xff, 
@@ -72,7 +74,7 @@ const uint8_t picture2[128] PROGMEM =
     0xff, 0xe9, 0xff, 0xff
 };
 
-const uint8_t picture3[32] PROGMEM= 
+const uint8_t picture3[32] PROGMEM= //Station
 {
 	0x80, 0x01, 
     0x7b, 0xc0, 
@@ -92,7 +94,7 @@ const uint8_t picture3[32] PROGMEM=
     0x80, 0x01
 };
 
-const uint8_t picture4[72] PROGMEM= 
+const uint8_t picture4[72] PROGMEM= //Microcontroller
 {
 	0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff, 
@@ -119,13 +121,13 @@ const uint8_t picture4[72] PROGMEM=
     0xff, 0xff, 0xff, 
     0xff, 0xff, 0xff
 };
-
+//======================================================================
 
 volatile uint16_t EepromSize = 512;	//Eeprom size in Bytes
 
 volatile uint16_t EepromPos = 0;	//Variable used to store the current position in Eeprom
 
-void SavePicture(uint8_t *BitMap, uint8_t width, uint8_t height);	//function used to store images in the Eeprom
+void SavePicture(uint8_t *BitMap, uint8_t width, uint8_t height);	//function used to store images in the Eeprom. Height and width of the image are in pixels. Width has to be dividable by 8.
 
 int main(void)
 {
@@ -170,10 +172,10 @@ void SavePicture(uint8_t *BitMap, uint8_t width, uint8_t height)
 			Counter++;
 			if(Counter == 0)
 			{
-				Active = !Active;
+				Active = !Active;	//Change Active to oposite state when counter overflows
 			}
 			
-			if(Active)
+			if(Active)	//Set LED to current state of Active
 			{
 				PORTB |= (1<<PB5);
 			}
