@@ -504,23 +504,19 @@ void drawImage (uint8_t imageNum, uint8_t mainCol, uint8_t backCol, uint8_t x, u
 	
 	uint16_t counter = 0;	//counter used for going throught the values in the picture list
 	
-	uint16_t EepromPos = 0;
-	uint16_t EepromStart = 0;
-	uint16_t height = 0;
-	uint16_t width = 0;
+	uint16_t EepromPos = 0;	//Varible used to Store the current position in the Eeprom
+	uint16_t EepromStart = 0;	//Variable which stores the starting plosition of the image inside of the Eeprom
+	uint16_t height = 0;	//Variable used to store the height of the image
+	uint16_t width = 0;	//Variable used to store the width of the image
 	
 	for(counter = 0; counter <= imageNum; counter++)
 	{
-		width = eeprom_read_byte((uint8_t*)(EepromStart));
+		width = eeprom_read_byte((uint8_t*)(EepromStart));	//get width of image from Eeprom
 		EepromStart++;
-		height = eeprom_read_byte((uint8_t*)(EepromStart));
+		height = eeprom_read_byte((uint8_t*)(EepromStart));	//get height of image from Eeprom
 		EepromStart++;
-		
-		//~ width = 32;
-		//~ height = 32;
-		
-		//~ EepromStart = 12;
-		if(counter != imageNum)
+
+		if(counter != imageNum)	//if current image is not the requested image Set Eeprom start to the start of the next image
 		{
 			EepromStart += ((width/8) * height);
 		}
@@ -541,7 +537,7 @@ void drawImage (uint8_t imageNum, uint8_t mainCol, uint8_t backCol, uint8_t x, u
 				SPI_Com(mode);	//Set the color mode
 				Wait4Idle();
 				
-				EepromPos = EepromStart;
+				EepromPos = EepromStart;	//Set current Position in Eeprom to the starting Position of the image
 				
 				for (counter = 0; counter < ((width / 8) * height); counter++)
 				{

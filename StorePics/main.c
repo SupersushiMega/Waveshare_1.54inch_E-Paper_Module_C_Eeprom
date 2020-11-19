@@ -121,37 +121,40 @@ const uint8_t picture4[72] PROGMEM=
 };
 
 
-uint16_t EepromSize = 512;
-uint8_t PictureCount = 0;
-volatile uint16_t EepromPos = 0;
+volatile uint16_t EepromSize = 512;	//Eeprom size in Bytes
 
-void SavePicture(uint8_t *BitMap, uint8_t SizeX, uint8_t SizeY);
+volatile uint16_t EepromPos = 0;	//Variable used to store the current position in Eeprom
+
+void SavePicture(uint8_t *BitMap, uint8_t width, uint8_t height);	//function used to store images in the Eeprom
 
 int main(void)
 {
-	DDRB |= (1<<PB5);
+	DDRB |= (1<<PB5);	//set Pin B5 as output
     
+    //Saving Pictures
+    //==================================================================
     SavePicture(&picture2, 32, 32);
     SavePicture(&picture3, 16, 16);
     SavePicture(&picture1, 16, 16);
     SavePicture(&picture4, 24, 24);
+    //==================================================================
     
     return 0;
 }//end of main
 
-void SavePicture(uint8_t *BitMap, uint8_t SizeX, uint8_t SizeY)
+void SavePicture(uint8_t *BitMap, uint8_t width, uint8_t height)
 {
-	uint16_t MapPos = 0;
-	if(EepromPos + (((SizeX/8) * SizeY) + 2) <= EepromSize)
+	uint16_t MapPos = 0;	//Variable used to store the current position in the bitmap
+	if(EepromPos + (((width/8) * height) + 2) <= EepromSize)	//Check if image fits into the leftover space in Eeprom
 	{
 		PORTB |= (1<<PB5); //Led ON to display Active Process
-		eeprom_write_byte((uint8_t*)EepromPos, SizeX);
+		eeprom_write_byte((uint8_t*)EepromPos, width);	//Write width of image into Eeprom
 		EepromPos++;
-		eeprom_write_byte((uint8_t*)EepromPos, SizeY);
+		eeprom_write_byte((uint8_t*)EepromPos, height);	//Write height of image into Eeprom
 		EepromPos++;
 		
 		MapPos = 0;
-		while(MapPos < ((SizeX / 8) * SizeY))
+		while(MapPos < ((width / 8) * height))	//Write Bitmap into Eeprom
 		{
 			eeprom_write_byte((uint8_t*)EepromPos, pgm_read_byte(&BitMap[MapPos]));
 			MapPos++;
@@ -160,9 +163,9 @@ void SavePicture(uint8_t *BitMap, uint8_t SizeX, uint8_t SizeY)
 	}
 	else
 	{
-		uint16_t Counter;
-		uint8_t Active = 0;
-		while(1)	//Led Blinking to display not enought storage
+		uint16_t Counter = 0;	//Used for the delay between on and off of the LED
+		uint8_t Active = 0;	//Used to store the current state of the LED
+		while(1)	//Led Blinking to display not enought storage space
 		{
 			Counter++;
 			if(Counter == 0)
